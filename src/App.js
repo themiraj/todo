@@ -30,9 +30,35 @@ function App() {
   }
 
   //Edit Todo Item
+  const [editVal,seteditVal] = useState();
   const onEdit = (todo) => {
-      console.log(todo);
+      const changeForm = {
+        flag:true
+      }
+      seteditVal({...todo, ...changeForm});
+
   } 
+  // Update Listing
+  const OnUpdate = (sno,title,desc) => {
+    let updatedV = [];
+    const OnUpdateList = {
+        sno:sno,
+        title:title,
+        desc:desc
+    }
+    todos.map((todo) => {
+      if(todo.sno == OnUpdateList.sno){
+        todo.title = OnUpdateList.title
+        todo.desc = OnUpdateList.desc
+        updatedV.push(todo);
+      }else{
+        updatedV.push(todo);
+      }
+
+    })
+    setTodos(updatedV);
+   
+  }
 
 
   // Todo Function
@@ -52,7 +78,10 @@ function App() {
     setTodos([...todos,myTodo])
   }
 
-
+  // Search Function
+  const SearchHandler = (e) => {
+    console.log(e.target.value ? 'true' : 'false')
+  }
   // Todos state
   const [todos , setTodos ] = useState(initTodo);
 
@@ -71,7 +100,10 @@ function App() {
           <Route exact path="/" render={()=>{
             return(
               <>
-                <AddTodo addTodo={addTodo} getValue={onEdit}/>
+                <AddTodo addTodo={addTodo} getValue={editVal ? editVal : ''} OnUpdate={OnUpdate}/>
+                <div className="Search container pt-4">
+                  <input type="text" onChange={SearchHandler} placeholder="Type Your Query"/>
+                </div>
                 <Todos todos={todos} onDelete={onDelete} onEdit={onEdit}/>
               </>
               )
